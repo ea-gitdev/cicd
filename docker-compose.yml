@@ -5,7 +5,7 @@ services:
       context: ./jenkins
       dockerfile: Dockerfile
 
-    image: cicd-jenkins:latest
+    image: jenkins:latest
     container_name: jenkins
 
     restart: unless-stopped
@@ -18,14 +18,14 @@ services:
       - "50000:50000"
 
     volumes:
-      - jenkins-data:/var/jenkins_home
+      - jenkinsData:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
 
     environment:
       TZ: Asia/Manila
 
     networks:
-      - cicd-network
+      - cicdNetwork
 
 
   sonarqube:
@@ -43,24 +43,29 @@ services:
       - "9000:9000"
 
     volumes:
-      - sonar-data:/opt/sonarqube/data
-      - sonar-extensions:/opt/sonarqube/extensions
-      - sonar-logs:/opt/sonarqube/logs
+      - sonarData:/opt/sonarqube/data
+      - sonarExtensions:/opt/sonarqube/extensions
+      - sonarLogs:/opt/sonarqube/logs
+      - sonarTemp:/opt/sonarqube/temp
 
     networks:
-      - cicd-network
+      - cicdNetwork
 
 
 networks:
-  cicd-network:
-    external: true
-    name: cicd-network
+  cicdNetwork:
+    name: cicdNetwork
 
 
 volumes:
-  jenkins-data:
-    external: true
+  jenkinsData:
+    name: jenkinsData
 
-  sonar-data:
-  sonar-extensions:
-  sonar-logs:
+  sonarData:
+    name: sonarData
+  sonarExtensions:
+    name: sonarExtensions
+  sonarLogs:
+    name: sonarLogs
+  sonarTemp:
+    name: sonarTemp
